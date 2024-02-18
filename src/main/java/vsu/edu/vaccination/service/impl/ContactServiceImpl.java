@@ -12,12 +12,9 @@ import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
-
-    public ContactServiceImpl(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
-    }
 
     @Override
     public List<Contact> getListOfContacts() {
