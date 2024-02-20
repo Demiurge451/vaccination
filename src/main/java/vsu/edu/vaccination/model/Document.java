@@ -1,10 +1,8 @@
 package vsu.edu.vaccination.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import vsu.edu.vaccination.model.enums.DocumentType;
 
 import java.util.UUID;
 
@@ -18,4 +16,11 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    private DocumentType type;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "person_id")
+    private Person person;
 }

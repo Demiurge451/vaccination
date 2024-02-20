@@ -78,7 +78,6 @@
 					<cleanDisabled>false</cleanDisabled>
 				</configuration>
 				<dependencies>
-					<!-- Add any additional dependencies required for Flyway here -->
 				</dependencies>
 			</plugin>
 		</plugins>
