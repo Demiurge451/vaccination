@@ -1,0 +1,21 @@
+package vsu.edu.vaccination.dto.response;
+
+import lombok.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class PersonResponse {
+    private UUID id;
+    private String login;
+    private String password;
+    private String fullName;
+    private List<ContactResponse> contacts;
+    private UUID addressId;
+    private List<DocumentResponse> documents;
+}

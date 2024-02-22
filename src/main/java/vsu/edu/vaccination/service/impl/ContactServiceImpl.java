@@ -1,38 +1,36 @@
 package vsu.edu.vaccination.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import vsu.edu.vaccination.exception.NotFoundException;
 import vsu.edu.vaccination.model.Contact;
 import vsu.edu.vaccination.repository.ContactRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vsu.edu.vaccination.service.ContactService;
+import vsu.edu.vaccination.service.CrudService;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
-public class ContactServiceImpl implements ContactService {
+@RequiredArgsConstructor
+public class ContactServiceImpl implements CrudService<Contact, UUID> {
     private final ContactRepository contactRepository;
 
-    public ContactServiceImpl(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
-    }
-
     @Override
-    public List<Contact> getListOfContacts() {
+    public List<Contact> getListOfItems() {
         return contactRepository.findAll();
     }
 
     @Override
-    public Contact findById(UUID id) {
+    public Contact getById(UUID id) {
         return contactRepository.findById(id).orElseThrow(() -> new NotFoundException("Contact not found"));
     }
 
     @Override
     @Transactional
     public void delete(UUID id) {
-        contactRepository.delete(findById(id));
+        contactRepository.delete(getById(id));
     }
 
     @Override

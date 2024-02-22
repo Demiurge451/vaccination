@@ -4,19 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import vsu.edu.vaccination.model.enums.DocumentType;
 
-import java.util.UUID;
-
 @Entity
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Document {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
+public class Document extends IdContainer{
     @Enumerated(EnumType.STRING)
     private DocumentType type;
 

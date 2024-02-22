@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import vsu.edu.vaccination.model.enums.ContactType;
 
-import java.util.UUID;
 
 @Entity
 @Setter
@@ -12,10 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Contact {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+public class Contact extends IdContainer{
 
     @Enumerated(EnumType.STRING)
     private ContactType type;

@@ -1,39 +1,36 @@
 package vsu.edu.vaccination.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import vsu.edu.vaccination.exception.NotFoundException;
 import vsu.edu.vaccination.model.Region;
 import vsu.edu.vaccination.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vsu.edu.vaccination.service.RegionService;
+import vsu.edu.vaccination.service.CrudService;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
-public class RegionServiceImpl implements RegionService {
+@RequiredArgsConstructor
+public class RegionServiceImpl implements CrudService<Region, UUID> {
     private final RegionRepository regionRepository;
 
-    public RegionServiceImpl(RegionRepository regionRepository) {
-        this.regionRepository = regionRepository;
-    }
-
-
     @Override
-    public List<Region> getListOfRegions() {
+    public List<Region> getListOfItems() {
         return regionRepository.findAll();
     }
 
     @Override
-    public Region findById(UUID id) {
+    public Region getById(UUID id) {
         return regionRepository.findById(id).orElseThrow(() -> new NotFoundException("Region not found"));
     }
 
     @Override
     @Transactional
     public void delete(UUID id){
-        regionRepository.delete(findById(id));
+        regionRepository.delete(getById(id));
     }
 
     @Override
