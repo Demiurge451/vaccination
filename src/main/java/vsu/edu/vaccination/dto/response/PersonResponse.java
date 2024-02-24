@@ -1,6 +1,5 @@
-package vsu.edu.vaccination.model;
+package vsu.edu.vaccination.dto.response;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -9,30 +8,32 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Getter
 @Setter
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Person extends IdContainer{
-    @Column(unique = true)
+@NoArgsConstructor
+public class PersonResponse {
+    private UUID id;
+
+    @NotBlank
     private String login;
 
+    @NotBlank
     private String password;
 
+    @NotBlank
     private String fullName;
 
+    @Past
+    @NotNull
     private LocalDate birthDate;
 
-    @OneToMany(mappedBy = "person")
-    private List<Contact> contacts;
-
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
-
-    @OneToMany(mappedBy = "person")
-    private List<Document> documents;
+    @NotEmpty
+    @NotNull
+    private List<ContactResponse> contacts;
+    private UUID addressId;
+    private List<DocumentResponse> documents;
 }

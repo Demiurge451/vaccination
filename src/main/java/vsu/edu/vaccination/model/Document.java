@@ -1,10 +1,10 @@
 package vsu.edu.vaccination.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import vsu.edu.vaccination.model.enums.DocumentType;
-
-import java.util.UUID;
 
 @Entity
 @Setter
@@ -12,11 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Document {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
+public class Document extends IdContainer{
     @Enumerated(EnumType.STRING)
     private DocumentType type;
 
