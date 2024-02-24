@@ -1,5 +1,6 @@
 package vsu.edu.vaccination.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -25,23 +26,28 @@ public class ContactController {
     }
 
     @GetMapping
-    public List<ContactResponse> getContacts() {
+    public @Valid List<ContactResponse> getContacts() {
         return contactService.getListOfItems().stream().map(mapper::mapItemToResponse).toList();
     }
 
     @GetMapping("/{id}")
-    public ContactResponse getContact(@PathVariable UUID id) {
+    public @Valid ContactResponse getContact(@PathVariable UUID id) {
         return mapper.mapItemToResponse(contactService.getById(id));
     }
 
     @PostMapping
-    public void createContact(@RequestBody ContactRequest contactRequest) {
+    public void createContact(@Valid @RequestBody ContactRequest contactRequest) {
         contactService.save(mapper.mapRequestToItem(contactRequest));
     }
 
     @DeleteMapping("/{id}")
     public void deleteContact(@PathVariable UUID id) {
         contactService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public @Valid ContactResponse updateContact(@PathVariable UUID id, @Valid @RequestBody ContactRequest contactRequest) {
+        return mapper.mapItemToResponse(contactService.update(id, mapper.mapRequestToItem(contactRequest)));
     }
 }
 

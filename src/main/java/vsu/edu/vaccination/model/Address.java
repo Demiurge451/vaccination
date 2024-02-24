@@ -25,7 +25,5 @@ public class Address extends IdContainer{
     private Region region;
 
     @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    @NotNull
-    @NotEmpty
     private List<Person> people;
 }

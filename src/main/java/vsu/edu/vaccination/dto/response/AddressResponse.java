@@ -1,5 +1,7 @@
 package vsu.edu.vaccination.dto.response;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -16,5 +18,8 @@ public class AddressResponse {
     private String street;
     private String buildingNumber;
     private UUID regionId;
+
+    @NotNull
+    @NotEmpty
     private List<PersonResponse> people;
 }

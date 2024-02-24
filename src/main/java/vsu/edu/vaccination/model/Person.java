@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -16,18 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Person extends IdContainer{
     @Column(unique = true)
-    @NotBlank
     private String login;
 
-    @NotBlank
     private String password;
 
-    @NotBlank
     private String fullName;
 
+    private LocalDate birthDate;
+
     @OneToMany(mappedBy = "person")
-    @NotEmpty
-    @NotNull
     private List<Contact> contacts;
 
     @ManyToOne

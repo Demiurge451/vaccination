@@ -1,10 +1,12 @@
 package vsu.edu.vaccination.controller;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import vsu.edu.vaccination.dto.request.RegionRequest;
+import vsu.edu.vaccination.dto.response.AddressResponse;
 import vsu.edu.vaccination.dto.response.RegionResponse;
 import vsu.edu.vaccination.mapper.RegionMapper;
 import vsu.edu.vaccination.model.Region;
@@ -27,23 +29,28 @@ public class RegionController {
 
 
     @GetMapping
-    public List<RegionResponse> getRegions() {
+    public @Valid List<RegionResponse> getRegions() {
         return regionService.getListOfItems().stream().map(mapper::mapItemToResponse).toList();
     }
 
     @GetMapping("/{id}")
-    public RegionResponse getRegion(@PathVariable UUID id) {
+    public @Valid RegionResponse getRegion(@PathVariable UUID id) {
         return mapper.mapItemToResponse(regionService.getById(id));
     }
 
     @PostMapping
-    public void createRegion(@RequestBody RegionRequest request) {
+    public void createRegion(@Valid @RequestBody RegionRequest request) {
         regionService.save(mapper.mapRequestToItem(request));
     }
 
     @DeleteMapping("/{id}")
     public void deleteAddress(@PathVariable UUID id) {
         regionService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public @Valid RegionResponse updateRegion(@PathVariable UUID id, @Valid @RequestBody RegionRequest regionRequest) {
+        return mapper.mapItemToResponse(regionService.update(id, mapper.mapRequestToItem(regionRequest)));
     }
 }
 

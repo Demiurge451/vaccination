@@ -35,6 +35,20 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
     @Override
     @Transactional
     public void save(Person person) {
+        //TODO add unique exception
         personRepository.save(person);
+    }
+
+    @Override
+    public Person update(UUID id, Person item) {
+        Person person = this.getById(id);
+        person.setLogin(item.getLogin());
+        person.setPassword(item.getPassword());
+        person.setFullName(item.getFullName());
+        person.setBirthDate(item.getBirthDate());
+        person.setContacts(item.getContacts());
+        person.setAddress(item.getAddress());
+        person.setDocuments(item.getDocuments());
+        return personRepository.save(person);
     }
 }

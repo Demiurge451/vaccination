@@ -38,4 +38,12 @@ public class ContactServiceImpl implements CrudService<Contact, UUID> {
     public void save(Contact address) {
         contactRepository.save(address);
     }
+
+    @Override
+    public Contact update(UUID id, Contact item) {
+        Contact contact = this.getById(id);
+        contact.setType(item.getType());
+        contact.setPerson(item.getPerson());
+        return contactRepository.save(contact);
+    }
 }

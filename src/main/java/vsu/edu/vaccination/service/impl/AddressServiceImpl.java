@@ -2,6 +2,8 @@ package vsu.edu.vaccination.service.impl;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import vsu.edu.vaccination.dto.request.AddressRequest;
+import vsu.edu.vaccination.dto.response.AddressResponse;
 import vsu.edu.vaccination.exception.NotFoundException;
 import vsu.edu.vaccination.model.Address;
 import vsu.edu.vaccination.repository.AddressRepository;
@@ -24,6 +26,9 @@ public class AddressServiceImpl implements CrudService<Address, UUID> {
 
     @Override
     public Address getById(UUID id) {
+        if (id == null) {
+            return null;
+        }
         return addressRepository.findById(id).orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
@@ -38,5 +43,18 @@ public class AddressServiceImpl implements CrudService<Address, UUID> {
     public void save(Address address) {
         addressRepository.save(address);
     }
+
+    @Override
+    public Address update(UUID id, Address item) {
+        Address address = this.getById(id);
+        address.setCity(item.getCity());
+        address.setStreet(item.getStreet());
+        address.setBuildingNumber(item.getBuildingNumber());
+        address.setRegion(item.getRegion());
+        address.setPeople(item.getPeople());
+        return addressRepository.save(address);
+    }
+
+
 }
 

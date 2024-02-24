@@ -1,6 +1,7 @@
 package vsu.edu.vaccination.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import vsu.edu.vaccination.model.enums.ContactType;
 
@@ -12,7 +13,6 @@ import vsu.edu.vaccination.model.enums.ContactType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Contact extends IdContainer{
-
     @Enumerated(EnumType.STRING)
     private ContactType type;
 

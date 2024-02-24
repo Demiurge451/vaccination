@@ -1,6 +1,7 @@
 package vsu.edu.vaccination.controller;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -26,24 +27,29 @@ public class AddressController {
     }
 
     @GetMapping
-    public List<AddressResponse> getAddresses() {
+    public @Valid List<AddressResponse> getAddresses() {
         return addressService.getListOfItems().stream()
                 .map(mapper::mapItemToResponse)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public AddressResponse getAddress(@PathVariable UUID id) {
+    public @Valid AddressResponse getAddress(@PathVariable UUID id) {
         return mapper.mapItemToResponse(addressService.getById(id));
     }
 
     @PostMapping
-    public void createAddress(@RequestBody AddressRequest addressRequest) {
+    public void createAddress(@Valid @RequestBody AddressRequest addressRequest) {
         addressService.save(mapper.mapRequestToItem(addressRequest));
     }
 
     @DeleteMapping("/{id}")
     public void deleteAddress(@PathVariable UUID id) {
         addressService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public @Valid AddressResponse updateAddress(@PathVariable UUID id, @Valid @RequestBody AddressRequest addressRequest) {
+        return mapper.mapItemToResponse(addressService.update(id, mapper.mapRequestToItem(addressRequest)));
     }
 }

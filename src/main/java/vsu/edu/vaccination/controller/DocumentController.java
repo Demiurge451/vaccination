@@ -1,6 +1,7 @@
 package vsu.edu.vaccination.controller;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -27,22 +28,27 @@ public class DocumentController {
     }
 
     @GetMapping
-    public List<DocumentResponse> getDocuments() {
+    public @Valid List<DocumentResponse> getDocuments() {
         return documentService.getListOfItems().stream().map(mapper::mapItemToResponse).toList();
     }
 
     @GetMapping("/{id}")
-    public DocumentResponse getDocument(@PathVariable UUID id) {
+    public @Valid DocumentResponse getDocument(@PathVariable UUID id) {
         return mapper.mapItemToResponse(documentService.getById(id));
     }
 
     @PostMapping
-    public void createDocument(@RequestBody DocumentRequest documentRequest) {
+    public void createDocument(@Valid @RequestBody DocumentRequest documentRequest) {
         documentService.save(mapper.mapRequestToItem(documentRequest));
     }
 
     @DeleteMapping("/{id}")
     public void deleteDocument(@PathVariable UUID id) {
         documentService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public DocumentResponse updateDocument(@PathVariable UUID id, @Valid @RequestBody DocumentRequest documentRequest) {
+        return mapper.mapItemToResponse(documentService.update(id, mapper.mapRequestToItem(documentRequest)));
     }
 }

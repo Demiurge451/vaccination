@@ -38,4 +38,12 @@ public class DocumentServiceImpl implements CrudService<Document, UUID> {
     public void save(Document address) {
         documentRepository.save(address);
     }
+
+    @Override
+    public Document update(UUID id, Document item) {
+        Document document = this.getById(id);
+        document.setType(item.getType());
+        document.setPerson(item.getPerson());
+        return documentRepository.save(document);
+    }
 }

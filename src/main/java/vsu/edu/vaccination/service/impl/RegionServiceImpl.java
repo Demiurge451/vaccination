@@ -38,4 +38,13 @@ public class RegionServiceImpl implements CrudService<Region, UUID> {
     public void save(Region address) {
         regionRepository.save(address);
     }
+
+    @Override
+    public Region update(UUID id, Region item) {
+        Region region = this.getById(id);
+        region.setCountry(item.getCountry());
+        region.setAdministrativeDivision(item.getAdministrativeDivision());
+        region.setAddresses(item.getAddresses());
+        return regionRepository.save(region);
+    }
 }
