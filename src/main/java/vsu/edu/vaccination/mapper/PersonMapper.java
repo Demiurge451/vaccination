@@ -1,7 +1,6 @@
 package vsu.edu.vaccination.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import vsu.edu.vaccination.dto.request.PersonRequest;
@@ -16,7 +15,7 @@ import vsu.edu.vaccination.service.CrudService;
 
 import java.util.UUID;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public abstract class PersonMapper {
     protected CrudService<Address, UUID> addressService;
 
@@ -27,12 +26,14 @@ public abstract class PersonMapper {
     @Mapping(target = "address", expression = "java(addressService.getById(personRequest.getAddressId()))")
     public abstract Person mapRequestToItem(PersonRequest personRequest);
 
-    @Mapping(target = "addressId", expression = "java(person.getAddress().getId())")
+    @Mapping(target = "addressId", source = "person.address.id")
     public abstract PersonResponse mapItemToResponse(Person person);
 
-    @Mapping(target = "personId", expression = "java(document.getPerson().getId())")
+    @Mapping(target = "personId", source = "document.person.id")
     public abstract DocumentResponse mapDocumentToResponse(Document document);
 
-    @Mapping(target = "personId", expression = "java(contact.getPerson().getId())")
+    @Mapping(target = "personId", source = "contact.person.id")
     public abstract ContactResponse mapContactToResponse(Contact contact);
+
+    public abstract void updatePerson(Person source, @MappingTarget Person target);
 }

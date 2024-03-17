@@ -2,9 +2,11 @@ package vsu.edu.vaccination.service.impl;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import vsu.edu.vaccination.dto.request.AddressRequest;
 import vsu.edu.vaccination.dto.response.AddressResponse;
 import vsu.edu.vaccination.exception.NotFoundException;
+import vsu.edu.vaccination.mapper.AddressMapper;
 import vsu.edu.vaccination.model.Address;
 import vsu.edu.vaccination.repository.AddressRepository;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AddressServiceImpl implements CrudService<Address, UUID> {
     private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
     @Override
-    public List<Address> getListOfItems() {
-        return addressRepository.findAll();
+    public List<Address> getListOfItems(PageRequest pageRequest) {
+        return addressRepository.findAll(pageRequest).getContent();
     }
 
     @Override
@@ -45,13 +48,10 @@ public class AddressServiceImpl implements CrudService<Address, UUID> {
     }
 
     @Override
+    @Transactional
     public Address update(UUID id, Address item) {
         Address address = this.getById(id);
-        address.setCity(item.getCity());
-        address.setStreet(item.getStreet());
-        address.setBuildingNumber(item.getBuildingNumber());
-        address.setRegion(item.getRegion());
-        address.setPeople(item.getPeople());
+        addressMapper.updateAddress(item, address);
         return addressRepository.save(address);
     }
 

@@ -1,7 +1,9 @@
 package vsu.edu.vaccination.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import vsu.edu.vaccination.exception.NotFoundException;
+import vsu.edu.vaccination.mapper.ContactMapper;
 import vsu.edu.vaccination.model.Contact;
 import vsu.edu.vaccination.repository.ContactRepository;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ContactServiceImpl implements CrudService<Contact, UUID> {
     private final ContactRepository contactRepository;
+    private final ContactMapper contactMapper;
 
     @Override
-    public List<Contact> getListOfItems() {
-        return contactRepository.findAll();
+    public List<Contact> getListOfItems(PageRequest pageRequest) {
+
+        return contactRepository.findAll(pageRequest).getContent();
     }
 
     @Override
@@ -40,10 +44,10 @@ public class ContactServiceImpl implements CrudService<Contact, UUID> {
     }
 
     @Override
+    @Transactional
     public Contact update(UUID id, Contact item) {
         Contact contact = this.getById(id);
-        contact.setType(item.getType());
-        contact.setPerson(item.getPerson());
+        contactMapper.updateContact(item, contact);
         return contactRepository.save(contact);
     }
 }

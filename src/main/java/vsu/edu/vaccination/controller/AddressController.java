@@ -4,6 +4,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import vsu.edu.vaccination.dto.request.AddressRequest;
 import vsu.edu.vaccination.dto.response.AddressResponse;
@@ -20,15 +22,17 @@ public class AddressController {
     private final CrudService<Address, UUID> addressService;
     private final AddressMapper mapper;
 
-    @Autowired
     public AddressController(@Qualifier("addressServiceImpl") CrudService<Address, UUID> addressService, AddressMapper mapper) {
         this.addressService = addressService;
         this.mapper = mapper;
     }
 
     @GetMapping
-    public @Valid List<AddressResponse> getAddresses() {
-        return addressService.getListOfItems().stream()
+    public @Valid List<AddressResponse> getAddresses(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "id") String sortParam) {
+        return addressService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam))).stream()
                 .map(mapper::mapItemToResponse)
                 .toList();
     }

@@ -1,15 +1,15 @@
 package vsu.edu.vaccination.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import vsu.edu.vaccination.dto.request.PersonRequest;
 import vsu.edu.vaccination.dto.response.PersonResponse;
 import vsu.edu.vaccination.mapper.PersonMapper;
 import vsu.edu.vaccination.model.Person;
 import vsu.edu.vaccination.service.CrudService;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -19,15 +19,19 @@ public class PersonController {
     private final CrudService<Person, UUID> personService;
     private final PersonMapper mapper;
 
-    @Autowired
     public PersonController(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService, PersonMapper mapper) {
         this.personService = personService;
         this.mapper = mapper;
     }
 
     @GetMapping
-    public @Valid List<PersonResponse> getPersons() {
-        return personService.getListOfItems().stream().map(mapper::mapItemToResponse).toList();
+    public @Valid List<PersonResponse> getPersons(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "id") String sortParam
+    ) {
+        List<PersonResponse> l = personService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam))).stream().map(mapper::mapItemToResponse).toList();
+        return l;
     }
 
     @GetMapping("/{id}")

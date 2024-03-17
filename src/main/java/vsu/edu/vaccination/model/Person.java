@@ -26,13 +26,13 @@ public class Person extends IdContainer{
 
     private LocalDate birthDate;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private List<Contact> contacts;
 
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private List<Document> documents;
 }

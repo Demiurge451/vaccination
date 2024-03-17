@@ -1,7 +1,9 @@
 package vsu.edu.vaccination.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import vsu.edu.vaccination.exception.NotFoundException;
+import vsu.edu.vaccination.mapper.DocumentMapper;
 import vsu.edu.vaccination.model.Document;
 import vsu.edu.vaccination.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DocumentServiceImpl implements CrudService<Document, UUID> {
     private final DocumentRepository documentRepository;
-
+    private final DocumentMapper documentMapper;
     @Override
-    public List<Document> getListOfItems() {
-        return documentRepository.findAll();
+    public List<Document> getListOfItems(PageRequest pageRequest) {
+
+        return documentRepository.findAll(pageRequest).getContent();
     }
 
     @Override
@@ -40,10 +43,10 @@ public class DocumentServiceImpl implements CrudService<Document, UUID> {
     }
 
     @Override
+    @Transactional
     public Document update(UUID id, Document item) {
         Document document = this.getById(id);
-        document.setType(item.getType());
-        document.setPerson(item.getPerson());
+        documentMapper.updateDocument(item, document);
         return documentRepository.save(document);
     }
 }

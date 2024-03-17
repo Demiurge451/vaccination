@@ -1,7 +1,9 @@
 package vsu.edu.vaccination.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import vsu.edu.vaccination.exception.NotFoundException;
+import vsu.edu.vaccination.mapper.RegionMapper;
 import vsu.edu.vaccination.model.Region;
 import vsu.edu.vaccination.repository.RegionRepository;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RegionServiceImpl implements CrudService<Region, UUID> {
     private final RegionRepository regionRepository;
+    private final RegionMapper regionMapper;
 
     @Override
-    public List<Region> getListOfItems() {
-        return regionRepository.findAll();
+    public List<Region> getListOfItems(PageRequest pageRequest) {
+        return regionRepository.findAll(pageRequest).getContent();
     }
 
     @Override
@@ -40,11 +43,10 @@ public class RegionServiceImpl implements CrudService<Region, UUID> {
     }
 
     @Override
+    @Transactional
     public Region update(UUID id, Region item) {
         Region region = this.getById(id);
-        region.setCountry(item.getCountry());
-        region.setAdministrativeDivision(item.getAdministrativeDivision());
-        region.setAddresses(item.getAddresses());
+        regionMapper.updateRegion(item, region);
         return regionRepository.save(region);
     }
 }

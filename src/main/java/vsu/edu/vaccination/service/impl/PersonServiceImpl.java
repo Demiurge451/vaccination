@@ -1,7 +1,10 @@
 package vsu.edu.vaccination.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import vsu.edu.vaccination.exception.NotFoundException;
+import vsu.edu.vaccination.exception.UniqueException;
+import vsu.edu.vaccination.mapper.PersonMapper;
 import vsu.edu.vaccination.model.Person;
 import vsu.edu.vaccination.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -16,9 +19,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PersonServiceImpl implements CrudService<Person, UUID> {
     private final PersonRepository personRepository;
+    private final PersonMapper personMapper;
     @Override
-    public List<Person> getListOfItems() {
-        return personRepository.findAll();
+    public List<Person> getListOfItems(PageRequest pageRequest) {
+        return personRepository.findAll(pageRequest).getContent();
     }
 
     @Override
@@ -34,21 +38,20 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
 
     @Override
     @Transactional
-    public void save(Person person) {
+    public void save(Person person) throws UniqueException {
         //TODO add unique exception
-        personRepository.save(person);
+        try {
+            personRepository.save(person);
+        } catch (Exception e) {
+            throw new UniqueException("Login isn't unique");
+        }
     }
 
     @Override
+    @Transactional
     public Person update(UUID id, Person item) {
         Person person = this.getById(id);
-        person.setLogin(item.getLogin());
-        person.setPassword(item.getPassword());
-        person.setFullName(item.getFullName());
-        person.setBirthDate(item.getBirthDate());
-        person.setContacts(item.getContacts());
-        person.setAddress(item.getAddress());
-        person.setDocuments(item.getDocuments());
+        personMapper.updatePerson(item, person);
         return personRepository.save(person);
     }
 }
