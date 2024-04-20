@@ -1,0 +1,2 @@
+alter table vaccination
+drop constraint vaccination_vaccination_place_id_key;
