@@ -5,6 +5,7 @@ import lombok.*;
 import vsu.edu.vaccination2.model.id_container.IdContainer;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person extends IdContainer {
+public class Person extends IdContainer<UUID> {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Vaccination> vaccinations;
 }

@@ -8,7 +8,7 @@ create table region (
 
 create table address (
     id uuid primary key default uuid_generate_v4(),
-    city varchar(255),
+    city varchar(255) not null,
     street varchar(255),
     building_number varchar(255),
     region_id UUID,

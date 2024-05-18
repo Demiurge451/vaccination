@@ -5,6 +5,8 @@ import lombok.*;
 import vsu.edu.vaccination.model.enums.ContactType;
 import vsu.edu.vaccination.model.id_container.IdContainer;
 
+import java.util.UUID;
+
 
 @Entity
 @Setter
@@ -12,11 +14,14 @@ import vsu.edu.vaccination.model.id_container.IdContainer;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Contact extends IdContainer {
+public class Contact extends IdContainer<UUID> {
     @Enumerated(EnumType.STRING)
     private ContactType type;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "person_id")
+    @ManyToOne(targetEntity = Person.class, optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "person_id", insertable = false, updatable = false)
     private Person person;
+
+    @Column(name = "person_id")
+    private UUID personId;
 }

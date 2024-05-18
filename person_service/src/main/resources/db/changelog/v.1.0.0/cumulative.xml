@@ -7,4 +7,11 @@
     <changeSet id="1" author="konstantin">
         <sqlFile path="init.sql" relativeToChangelogFile="true"/>
     </changeSet>
+
+    <changeSet id="2" author="konstantin">
+        <sqlFile path="add_secondary_id.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <dropColumn tableName="document" columnName="document_id"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

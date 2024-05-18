@@ -20,8 +20,7 @@ public class DocumentServiceImpl implements CrudService<Document, UUID> {
     private final DocumentRepository documentRepository;
     private final DocumentMapper documentMapper;
     @Override
-    public List<Document> getListOfItems(PageRequest pageRequest) {
-
+    public List<Document> getAll(PageRequest pageRequest) {
         return documentRepository.findAll(pageRequest).getContent();
     }
 

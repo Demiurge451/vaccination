@@ -1,8 +1,6 @@
 package vsu.edu.vaccination.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +9,7 @@ import vsu.edu.vaccination.dto.response.ContactResponse;
 import vsu.edu.vaccination.mapper.ContactMapper;
 import vsu.edu.vaccination.model.Contact;
 import vsu.edu.vaccination.service.CrudService;
+import vsu.edu.vaccination.sort_enums.ContactSortParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +20,7 @@ public class ContactController {
     private final CrudService<Contact, UUID> contactService;
     private final ContactMapper mapper;
 
-    public ContactController(@Qualifier("contactServiceImpl") CrudService<Contact, UUID> contactService, ContactMapper mapper) {
+    public ContactController(CrudService<Contact, UUID> contactService, ContactMapper mapper) {
         this.contactService = contactService;
         this.mapper = mapper;
     }
@@ -30,9 +29,11 @@ public class ContactController {
     public @Valid List<ContactResponse> getContacts(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "id") String sortParam
+            @RequestParam(required = false, defaultValue = "ID_ASC") ContactSortParam sortParam
     ) {
-        return contactService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam))).stream().map(mapper::mapItemToResponse).toList();
+        return mapper.mapItemsToResponse(
+                contactService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
+        );
     }
 
     @GetMapping("/{id}")

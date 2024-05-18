@@ -1,17 +1,16 @@
 package vsu.edu.vaccination.controller;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vsu.edu.vaccination.dto.request.AddressRequest;
 import vsu.edu.vaccination.dto.response.AddressResponse;
 import vsu.edu.vaccination.mapper.AddressMapper;
 import vsu.edu.vaccination.model.Address;
 import vsu.edu.vaccination.service.CrudService;
+import vsu.edu.vaccination.sort_enums.AddressSortParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +21,7 @@ public class AddressController {
     private final CrudService<Address, UUID> addressService;
     private final AddressMapper mapper;
 
-    public AddressController(@Qualifier("addressServiceImpl") CrudService<Address, UUID> addressService, AddressMapper mapper) {
+    public AddressController(CrudService<Address, UUID> addressService, AddressMapper mapper) {
         this.addressService = addressService;
         this.mapper = mapper;
     }
@@ -31,10 +30,10 @@ public class AddressController {
     public @Valid List<AddressResponse> getAddresses(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "id") String sortParam) {
-        return addressService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam))).stream()
-                .map(mapper::mapItemToResponse)
-                .toList();
+            @RequestParam(required = false, defaultValue = "ID_ASC") AddressSortParam sortParam) {
+        return mapper.mapItemsToResponse(
+                addressService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
+        );
     }
 
     @GetMapping("/{id}")

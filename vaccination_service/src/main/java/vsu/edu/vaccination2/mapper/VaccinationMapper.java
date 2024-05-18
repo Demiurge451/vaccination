@@ -13,27 +13,16 @@ import vsu.edu.vaccination2.model.Vaccination;
 import vsu.edu.vaccination2.model.VaccinationPlace;
 import vsu.edu.vaccination2.service.CrudService;
 
+import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring")
 public abstract class VaccinationMapper {
-    protected CrudService<Person, UUID> personService;
-    protected CrudService<VaccinationPlace, UUID> vaccinationPlaceService;
-
-    @Autowired
-    protected void setVaccinationMapper(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService,
-                                        @Qualifier("vaccinationPlaceServiceImpl") CrudService<VaccinationPlace, UUID> vaccinationPlaceService) {
-        this.personService = personService;
-        this.vaccinationPlaceService = vaccinationPlaceService;
-    }
-
-    @Mapping(target = "person", expression = "java(personService.getById(vaccinationRequest.getPersonId()))")
-    @Mapping(target = "vaccinationPlace", expression = "java(vaccinationPlaceService.getById(vaccinationRequest.getVaccinationPlaceId()))")
     public abstract Vaccination mapRequestToItem(VaccinationRequest vaccinationRequest);
 
-    @Mapping(target = "personId", source = "vaccination.person.id")
-    @Mapping(target = "vaccinationPlaceId", source = "vaccination.vaccinationPlace.id")
     public abstract VaccinationResponse mapItemToResponse(Vaccination vaccination);
 
     public abstract void updateVaccination(Vaccination source, @MappingTarget Vaccination target);
+
+    public abstract List<VaccinationResponse> mapItemsToResponse(List<Vaccination> source);
 }

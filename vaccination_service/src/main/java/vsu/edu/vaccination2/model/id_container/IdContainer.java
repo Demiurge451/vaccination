@@ -12,8 +12,8 @@ import java.util.UUID;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class IdContainer {
+public abstract class IdContainer<T> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected UUID id;
+    protected T id;
 }

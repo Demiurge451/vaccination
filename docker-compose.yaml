@@ -1,0 +1,37 @@
+services:
+  postgres-person:
+    container_name: person
+    image: postgres:16
+    ports:
+      - "6432:5432"
+    environment:
+      POSTGRES_DB: person_db
+      POSTGRES_USER: konstantin
+      POSTGRES_PASSWORD: konstantin
+
+    volumes:
+      - postgres-person:/var/lib/postgres/data
+    networks:
+      - backend-vaccination
+
+  postgres-vaccination:
+    container_name: vaccination
+    image: postgres:16
+    ports:
+      - "6433:5432"
+    environment:
+      POSTGRES_DB: service_db
+      POSTGRES_USER: konstantin
+      POSTGRES_PASSWORD: konstantin
+
+    volumes:
+      - postgres-vaccination:/var/lib/postgres/data
+    networks:
+      - backend-vaccination
+
+volumes:
+  postgres-person: {}
+  postgres-vaccination: {}
+
+networks:
+  backend-vaccination: {}

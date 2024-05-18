@@ -13,27 +13,29 @@ import vsu.edu.vaccination.model.Document;
 import vsu.edu.vaccination.model.Person;
 import vsu.edu.vaccination.service.CrudService;
 
+import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring")
 public abstract class PersonMapper {
-    protected CrudService<Address, UUID> addressService;
+    protected IdMapper<Document, UUID> idMapperDocument;
+    protected IdMapper<Contact, UUID> idMapperContact;
 
     @Autowired
-    public void setAddressService(@Qualifier("addressServiceImpl") CrudService<Address, UUID> addressService) {
-        this.addressService = addressService;
+    public void setAddressService(IdMapper<Document, UUID> idMapperDocument,
+                                  IdMapper<Contact, UUID> idMapperContact,
+                                  CrudService<Address, UUID> addressService) {
+        this.idMapperContact = idMapperContact;
+        this.idMapperDocument = idMapperDocument;
     }
-    @Mapping(target = "address", expression = "java(addressService.getById(personRequest.getAddressId()))")
+
     public abstract Person mapRequestToItem(PersonRequest personRequest);
 
-    @Mapping(target = "addressId", source = "person.address.id")
+    @Mapping(target = "documents", expression = "java(idMapperDocument.mapItemToId(person.getDocuments()))")
+    @Mapping(target = "contacts", expression = "java(idMapperContact.mapItemToId(person.getContacts()))")
     public abstract PersonResponse mapItemToResponse(Person person);
 
-    @Mapping(target = "personId", source = "document.person.id")
-    public abstract DocumentResponse mapDocumentToResponse(Document document);
-
-    @Mapping(target = "personId", source = "contact.person.id")
-    public abstract ContactResponse mapContactToResponse(Contact contact);
+    public abstract List<PersonResponse> mapItemsToResponses(List<Person> persons);
 
     public abstract void updatePerson(Person source, @MappingTarget Person target);
 }
