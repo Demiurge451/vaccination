@@ -12,22 +12,17 @@ import vsu.edu.vaccination.model.Contact;
 import vsu.edu.vaccination.model.Person;
 import vsu.edu.vaccination.service.CrudService;
 
+import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring")
 public abstract class ContactMapper {
-    protected CrudService<Person, UUID> personService;
 
-    @Autowired
-    public void setPersonService(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService)  {
-        this.personService = personService;
-    }
-
-    @Mapping(target = "person", expression = "java(personService.getById(contactRequest.getPersonId()))")
     public abstract Contact mapRequestToItem(ContactRequest contactRequest);
 
-    @Mapping(target = "personId", source = "contact.person.id")
     public abstract ContactResponse mapItemToResponse(Contact contact);
 
     public abstract void updateContact(Contact source, @MappingTarget Contact target);
+
+    public abstract List<ContactResponse> mapItemsToResponse(List<Contact> source);
 }

@@ -10,10 +10,13 @@ import lombok.Setter;
 import java.util.UUID;
 
 @MappedSuperclass
-@Getter
 @Setter
-public abstract class IdContainer {
+public abstract class IdContainer<ID> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected UUID id;
+    protected ID id;
+
+    public ID getId() {
+        return id;
+    }
 }

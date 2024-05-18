@@ -1,6 +1,7 @@
 package vsu.edu.vaccination.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,9 @@ import lombok.*;
 @NoArgsConstructor
 public class RegionRequest {
     @NotBlank
+    @Size(min = 1, max = 255)
     private String country;
 
+    @Size(min = 1, max = 255)
     private String administrativeDivision;
 }

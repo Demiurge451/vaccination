@@ -14,21 +14,17 @@ import vsu.edu.vaccination.model.Document;
 import vsu.edu.vaccination.model.Person;
 import vsu.edu.vaccination.service.CrudService;
 
+import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring")
 public abstract class DocumentMapper {
-    protected CrudService<Person, UUID> personService;
 
-    @Autowired
-    public void setPersonService(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService) {
-        this.personService = personService;
-    }
-    @Mapping(target = "person", expression = "java(personService.getById(documentRequest.getPersonId()))")
     public abstract Document mapRequestToItem(DocumentRequest documentRequest);
 
-    @Mapping(target = "personId", source = "document.person.id")
     public abstract DocumentResponse mapItemToResponse(Document document);
 
     public abstract void updateDocument(Document source, @MappingTarget Document target);
+
+    public abstract List<DocumentResponse> mapItemsToResponses(List<Document> documents);
 }

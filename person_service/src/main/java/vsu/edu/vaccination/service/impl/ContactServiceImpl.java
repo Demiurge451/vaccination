@@ -21,7 +21,7 @@ public class ContactServiceImpl implements CrudService<Contact, UUID> {
     private final ContactMapper contactMapper;
 
     @Override
-    public List<Contact> getListOfItems(PageRequest pageRequest) {
+    public List<Contact> getAll(PageRequest pageRequest) {
 
         return contactRepository.findAll(pageRequest).getContent();
     }

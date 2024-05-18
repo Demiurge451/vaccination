@@ -13,8 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ContactResponse {
     private UUID id;
-    @NotNull
     private ContactType type;
-    @NotNull
     private UUID personId;
 }

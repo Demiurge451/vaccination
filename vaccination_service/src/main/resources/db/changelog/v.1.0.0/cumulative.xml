@@ -8,6 +8,16 @@
         <sqlFile path="init.sql" relativeToChangelogFile="true"/>
     </changeSet>
     <changeSet id="2" author="konstantin">
-        <sqlFile path="removeOneToOne.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="remove_one_to_one.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="3" author="konstantin">
+        <sqlFile path="init_2.0.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <dropTable tableName="vaccination"/>
+            <dropTable tableName="vaccination_place"/>
+            <dropTable tableName="person"/>
+            <dropTable tableName="region"/>
+        </rollback>
     </changeSet>
 </databaseChangeLog>

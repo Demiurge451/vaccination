@@ -12,5 +12,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PersonResponse {
     private UUID id;
-    private List<VaccinationResponse> vaccinations;
+    private List<UUID> vaccinations;
 }

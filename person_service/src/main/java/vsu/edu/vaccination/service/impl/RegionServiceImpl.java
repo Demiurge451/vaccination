@@ -16,12 +16,12 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class RegionServiceImpl implements CrudService<Region, UUID> {
+public class  RegionServiceImpl implements CrudService<Region, UUID> {
     private final RegionRepository regionRepository;
     private final RegionMapper regionMapper;
 
     @Override
-    public List<Region> getListOfItems(PageRequest pageRequest) {
+    public List<Region> getAll(PageRequest pageRequest) {
         return regionRepository.findAll(pageRequest).getContent();
     }
 

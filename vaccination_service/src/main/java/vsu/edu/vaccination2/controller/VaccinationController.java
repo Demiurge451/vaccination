@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import vsu.edu.vaccination2.service.CrudService;
+import vsu.edu.vaccination2.sort_enums.VaccinationSortParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,28 +20,29 @@ import java.util.UUID;
 public class VaccinationController {
     private final CrudService<Vaccination, UUID> vaccinationService;
     private final VaccinationMapper vaccinationMapper;
-    public VaccinationController(@Qualifier("vaccinationServiceImpl") CrudService<Vaccination, UUID> vaccinationService, VaccinationMapper vaccinationMapper) {
+    public VaccinationController(CrudService<Vaccination, UUID> vaccinationService, VaccinationMapper vaccinationMapper) {
         this.vaccinationService = vaccinationService;
         this.vaccinationMapper = vaccinationMapper;
     }
 
     @GetMapping
-    public List<VaccinationResponse> getVaccinations(
+    public @Valid List<VaccinationResponse> getVaccinations(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "id") String sortParam
+            @RequestParam(required = false, defaultValue = "ID_ASC") VaccinationSortParam sortParam
     ) {
-        return vaccinationService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
-                .stream().map(vaccinationMapper::mapItemToResponse).toList();
+        return vaccinationMapper.mapItemsToResponse(
+                vaccinationService.getListOfItems(PageRequest.of(page, size, sortParam.getSortValue()))
+        );
     }
 
     @GetMapping("/{id}")
-    public VaccinationResponse getVaccination(@PathVariable UUID id) {
+    public @Valid VaccinationResponse getVaccination(@PathVariable UUID id) {
         return vaccinationMapper.mapItemToResponse(vaccinationService.getById(id));
     }
 
     @PostMapping
-    public void createVaccination(@RequestBody VaccinationRequest vaccinationRequest) {
+    public void createVaccination(@Valid @RequestBody VaccinationRequest vaccinationRequest) {
         vaccinationService.save(vaccinationMapper.mapRequestToItem(vaccinationRequest));
     }
 
@@ -50,7 +52,7 @@ public class VaccinationController {
     }
 
     @PutMapping("/{id}")
-    public VaccinationResponse updateVaccination(@PathVariable UUID id, @RequestBody VaccinationRequest vaccinationRequest) {
+    public @Valid VaccinationResponse updateVaccination(@PathVariable UUID id, @Valid @RequestBody VaccinationRequest vaccinationRequest) {
         return vaccinationMapper.mapItemToResponse(vaccinationService.update(id, vaccinationMapper.mapRequestToItem(vaccinationRequest)));
     }
 }

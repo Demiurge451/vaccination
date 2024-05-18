@@ -2,8 +2,6 @@ package vsu.edu.vaccination.controller;
 
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +10,8 @@ import vsu.edu.vaccination.dto.response.DocumentResponse;
 import vsu.edu.vaccination.mapper.DocumentMapper;
 import vsu.edu.vaccination.model.Document;
 import vsu.edu.vaccination.service.CrudService;
+import vsu.edu.vaccination.sort_enums.DocumentSortParam;
 
-import javax.print.Doc;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +21,7 @@ public class DocumentController {
     private final CrudService<Document, UUID> documentService;
     private final DocumentMapper mapper;
 
-    public DocumentController(@Qualifier("documentServiceImpl") CrudService<Document, UUID> documentService, DocumentMapper mapper) {
+    public DocumentController(CrudService<Document, UUID> documentService, DocumentMapper mapper) {
         this.documentService = documentService;
         this.mapper = mapper;
     }
@@ -32,9 +30,11 @@ public class DocumentController {
     public @Valid List<DocumentResponse> getDocuments(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "id") String sortParam
+            @RequestParam(required = false, defaultValue = "ID_ASC") DocumentSortParam sortParam
     ) {
-        return documentService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam))).stream().map(mapper::mapItemToResponse).toList();
+        return mapper.mapItemsToResponses(
+                documentService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
+        );
     }
 
     @GetMapping("/{id}")

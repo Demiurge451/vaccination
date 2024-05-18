@@ -6,6 +6,7 @@ import vsu.edu.vaccination.model.id_container.IdContainer;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person extends IdContainer {
+public class Person extends IdContainer<UUID> {
     @Column(unique = true)
     private String login;
 
@@ -26,9 +27,12 @@ public class Person extends IdContainer {
     @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private List<Contact> contacts;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
+    @ManyToOne(targetEntity = Address.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id", insertable = false, updatable = false)
     private Address address;
+
+    @Column(name = "address_id")
+    private UUID addressId;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private List<Document> documents;

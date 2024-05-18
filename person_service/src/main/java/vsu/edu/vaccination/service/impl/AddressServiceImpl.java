@@ -23,15 +23,12 @@ public class AddressServiceImpl implements CrudService<Address, UUID> {
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
     @Override
-    public List<Address> getListOfItems(PageRequest pageRequest) {
+    public List<Address> getAll(PageRequest pageRequest) {
         return addressRepository.findAll(pageRequest).getContent();
     }
 
     @Override
     public Address getById(UUID id) {
-        if (id == null) {
-            return null;
-        }
         return addressRepository.findById(id).orElseThrow(() -> new NotFoundException("Address not found"));
     }
 

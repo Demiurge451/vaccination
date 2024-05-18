@@ -5,6 +5,7 @@ import lombok.*;
 import vsu.edu.vaccination.model.id_container.IdContainer;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Setter
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Region extends IdContainer {
+public class Region extends IdContainer<UUID> {
     private String country;
 
     private String administrativeDivision;

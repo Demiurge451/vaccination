@@ -7,9 +7,9 @@ import vsu.edu.vaccination2.mapper.PersonMapper;
 import vsu.edu.vaccination2.model.Person;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import vsu.edu.vaccination2.service.CrudService;
+import vsu.edu.vaccination2.sort_enums.PersonSortParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class PersonController {
     private final CrudService<Person, UUID> personService;
     private final PersonMapper personMapper;
 
-    public PersonController(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService, PersonMapper personMapper) {
+    public PersonController(CrudService<Person, UUID> personService, PersonMapper personMapper) {
         this.personService = personService;
         this.personMapper = personMapper;
     }
@@ -29,9 +29,11 @@ public class PersonController {
     public @Valid List<PersonResponse> getPersons(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "id") String sortParam
+            @RequestParam(required = false, defaultValue = "ID_ASC") PersonSortParam sortParam
     ) {
-        return personService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam))).stream().map(personMapper::mapItemToResponse).toList();
+        return personMapper.mapItemsToResponse(
+                personService.getListOfItems(PageRequest.of(page, size, sortParam.getSortValue()))
+        );
     }
 
     @GetMapping("/{id}")

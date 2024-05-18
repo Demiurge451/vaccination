@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6432/vaccination
+    url: jdbc:postgresql://localhost:6433/service_db
     username: konstantin
     password: konstantin
 
